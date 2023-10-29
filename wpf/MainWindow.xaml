@@ -1,0 +1,119 @@
+﻿<Window x:Class="wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:wpf"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="1000"
+        ResizeMode="NoResize">
+    <Window.Resources>
+        <SolidColorBrush x:Key="WhiteBackgroundBrush" Color="White" />
+        <SolidColorBrush x:Key="GreenBackgroundBrush" Color="LightGreen" />
+        <SolidColorBrush x:Key="DarkYellowBackgroundBrush" Color="DarkGoldenrod" />
+        <SolidColorBrush x:Key="BlueBackgroundBrush" Color="Blue" />
+    </Window.Resources>
+    <Grid>
+
+        <StackPanel Width="200"
+                    Grid.Row="1"
+                    HorizontalAlignment="Left">
+
+            <Label Content="Name" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" />
+            <TextBox x:Name="TaskName"
+             Foreground="Black"
+             FontSize="15"
+             BorderThickness="1,1,1,1"
+             Margin="10,10,10,10"
+             TextChanged="TaskName_TextChanged">
+            </TextBox>
+            <Label Content="Description" VerticalAlignment="Center" HorizontalAlignment="Left" Width="100" Margin="10,10,0,0" />
+            <TextBox x:Name="TaskDescription"
+                     Foreground="Black"
+                     FontSize="15"
+                     BorderThickness="1,1,1,1"
+                     Margin="10,10,10,10" TextChanged="TaskDescription_TextChanged">
+            </TextBox>
+            <Button x:Name="btnAddTask"
+                            Content="Add Task"
+                            Width="100"
+                            Height="30"
+                            Margin="10,10,0,0"
+                            Click="Button_AddTask" />
+            <Button x:Name="btnFilter"
+                            Content="Filters"
+                            Width="100"
+                            Height="30"
+                            Margin="10,10,0,0"
+                            Click="Button_Filter" />
+            <Grid Margin="10" x:Name="Filter_Grid" Visibility="Collapsed">
+                <Border Background="GhostWhite" BorderBrush="Gainsboro">
+                    <StackPanel Margin="10">
+                        <Label>Name</Label>
+                        <TextBox KeyUp="NameTextBox_KeyUp"  x:Name="FilterName" Margin="10" ></TextBox>
+                        <Label>Status:</Label>
+                        <ComboBox x:Name="Status_Combobox" Margin="10" SelectionChanged="ComboBox_SelectionChanged">
+                            <ComboBoxItem >Created</ComboBoxItem>
+                            <ComboBoxItem >In Progress</ComboBoxItem>
+                            <ComboBoxItem >Postponed</ComboBoxItem>
+                            <ComboBoxItem >Finished</ComboBoxItem>
+                        </ComboBox>
+                        <Label>Date:</Label>
+                        <Label>"Created Date"</Label>
+                        <DatePicker SelectedDateChanged="CreatedDate_Filter" Margin="10"></DatePicker>
+                        <Label>"Finished Date"</Label>
+                        <DatePicker SelectedDateChanged="FinishedDate_Filter" Margin="10"></DatePicker>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+        <StackPanel Width="760"
+                    Grid.Row="2"
+                    HorizontalAlignment="Right">
+            <StackPanel.Resources>
+                <CollectionViewSource x:Key="tasksViewSource" Source="{Binding WerkskesList}" />
+            </StackPanel.Resources>
+            <ListView Margin="0,10,0,0" Name="taskListView" Grid.Row="2" MouseDoubleClick="TaskListView_MouseDoubleClick">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="ID" Width="50" DisplayMemberBinding="{Binding Id}" />
+                        <GridViewColumn Header="Name" Width="150" DisplayMemberBinding="{Binding Name}" />
+                        <GridViewColumn Header="Description" Width="200" DisplayMemberBinding="{Binding Description}" />
+                        <GridViewColumn Header="Status" Width="100" DisplayMemberBinding="{Binding Status}" />
+                        <GridViewColumn Header="Date Created" Width="100" DisplayMemberBinding="{Binding StartDate}" />
+                        <GridViewColumn Header="Date Finished" Width="100" DisplayMemberBinding="{Binding DoneDate}" />
+                        <GridViewColumn Header="Age (days)" Width="50" DisplayMemberBinding="{Binding Countdown}" />
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListViewItem">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <GridViewRowPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Status}" Value="Pending">
+                                <Setter Property="Background" Value="{StaticResource WhiteBackgroundBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Status}" Value="In Progress">
+                                <Setter Property="Background" Value="{StaticResource GreenBackgroundBrush}" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Status}" Value="Postponed">
+                                <Setter Property="Background" Value="{StaticResource DarkYellowBackgroundBrush}" />
+                            </DataTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource BlueBackgroundBrush}" />
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Window>

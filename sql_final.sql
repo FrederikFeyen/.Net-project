@@ -1,0 +1,32 @@
+﻿
+DROP TABLE IF EXISTS Comment;
+GO
+DROP TABLE IF EXISTS Task;
+GO
+
+DROP SCHEMA IF EXISTS Tasks;
+GO
+
+CREATE SCHEMA Tasks;
+GO
+
+CREATE TABLE Task (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(255),
+    Status NVARCHAR(50) NOT NULL,
+    CreatedDate DATETIME NOT NULL,
+    StartedDate DATETIME,
+    FinishedDate DATETIME,
+    PostponedDate DATETIME,
+    Reason NVARCHAR(255)
+);
+
+CREATE TABLE Comment (
+    CommentId INT PRIMARY KEY IDENTITY(1,1),
+    Text NVARCHAR(255),
+    CreatedAt DATETIME NOT NULL,
+    CommentReason NVARCHAR(255),
+    TaskId INT,
+    FOREIGN KEY (TaskId) REFERENCES Task(Id)
+);
